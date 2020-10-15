@@ -3,18 +3,26 @@ import numpy as np
 import time
 import glob
 import os
+import sys
+
 start_time=time.time()
 cap = cv2.VideoCapture("1.mp4")
 s=1
+
 #segmentation
 count=0
-s, first_frame = cap.read()
+try:
+	s, first_frame = cap.read()
+except
+	print("Could not open source video.")
+	sys.exit(1)
 while s:
 	s, frame = cap.read()
 	cv2.imwrite("orig_frame%d.jpg" % count, frame)
 	count += 1
 count-=2
 print("Video segmented to ",count," frames.")
+
 #difference
 first_gray = cv2.cvtColor(first_frame, cv2.COLOR_BGR2GRAY)
 first_gray = cv2.GaussianBlur(first_gray, (5, 5), 0)
@@ -34,6 +42,7 @@ while i<=count:
 	cv2.imwrite("diff_frame%d.jpg" % i, difference)
 	i=i+1
 print("Generated difference frames.")
+
 #merging
 i=0
 img_array = []
@@ -66,5 +75,5 @@ out.release()
 	# if key == 27:
 	# 	break
 	# i=i+1
-print ("Process Complete after %s seconds"%(time.time()-start_time))
+print ("Process took %s seconds to complete"%(time.time()-start_time))
 
